@@ -14,7 +14,7 @@ LittleIntern::~LittleIntern()
 
 void LittleIntern::initiate(size_t funcCount, size_t staticCount)
 {
-	functions = new std::pair<void*, size_t>[funcCount];
+	functions = new std::pair<std::function<Func>, size_t>[funcCount];
 	staticMemory = new void* [staticCount];
 }
 
@@ -23,11 +23,11 @@ void LittleIntern::run(std::istream& in)
 	char ins;
 	while (in.get(ins).good())
 	{
-
+		execute(in, ins);
 	}
 }
 
-void LittleIntern::registerFunc(size_t id, LittleIntern::Func function, size_t params)
+void LittleIntern::registerFunc(size_t id, const std::function<LittleIntern::Func>& function, size_t params)
 {
 	functions[id] = std::make_pair(function, params);
 }
@@ -51,7 +51,7 @@ void LittleIntern::execute(std::istream& in, Byte instruction)
 			Byte miniValLoc = get<Byte>(in);
 			size_t jumpPos = get<size_t>(in);
 
-			if (staticMemory[miniValLoc]) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
+			if (staticMemory[miniValLoc] && in.good()) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
 		}
 		return;
 		case I_BOZ:
@@ -59,7 +59,7 @@ void LittleIntern::execute(std::istream& in, Byte instruction)
 			Byte miniValLoc = get<Byte>(in);
 			size_t jumpPos = get<size_t>(in);
 
-			if (!staticMemory[miniValLoc]) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
+			if (!staticMemory[miniValLoc] && in.good()) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
 		}
 		return;
 		case I_BNE:
@@ -67,7 +67,7 @@ void LittleIntern::execute(std::istream& in, Byte instruction)
 			Byte miniValLoc = get<Byte>(in);
 			size_t jumpPos = get<size_t>(in);
 
-			if (intptr_t(staticMemory[miniValLoc]) < 0) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
+			if (intptr_t(staticMemory[miniValLoc]) < 0 && in.good()) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
 		}
 		return;
 		case I_BPO:
@@ -75,8 +75,11 @@ void LittleIntern::execute(std::istream& in, Byte instruction)
 			Byte miniValLoc = get<Byte>(in);
 			size_t jumpPos = get<size_t>(in);
 
-			if (intptr_t(staticMemory[miniValLoc]) >= 0) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
+			if (intptr_t(staticMemory[miniValLoc]) >= 0 && in.good()) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
 		}
 		return;
+		case I_SFUNC: runFunction<Byte>(in); return;
+		case I_MFUNC: runFunction<unsigned short>(in); return;
+		case I_BFUNC: runFunction<size_t>(in); return;
 	}
 }

@@ -1,24 +1,26 @@
 #include "LittleIntern.h"
 
-LittleIntern::LittleIntern()
+using namespace LilBit;
+
+Intern::Intern()
 {
 	functions = nullptr;
 	staticMemory = nullptr;
 }
 
-LittleIntern::~LittleIntern()
+Intern::~Intern()
 {
 	delete functions;
 	delete staticMemory;
 }
 
-void LittleIntern::initiate(size_t funcCount, size_t staticCount)
+void Intern::initiate(size_t funcCount, size_t staticCount)
 {
 	functions = new std::pair<std::function<Func>, size_t>[funcCount];
 	staticMemory = new void* [staticCount];
 }
 
-void LittleIntern::run(std::istream& in)
+void Intern::run(std::istream& in)
 {
 	char ins;
 	while (in.get(ins).good())
@@ -27,17 +29,17 @@ void LittleIntern::run(std::istream& in)
 	}
 }
 
-void LittleIntern::registerFunc(size_t id, const std::function<LittleIntern::Func>& function, size_t params)
+void Intern::registerFunc(size_t id, const std::function<Func>& function, size_t params)
 {
 	functions[id] = std::make_pair(function, params);
 }
 
-void LittleIntern::registerVariable(size_t id, void* var)
+void Intern::registerVariable(size_t id, void* var)
 {
 	staticMemory[id] = var;
 }
 
-void LittleIntern::execute(std::istream& in, Byte instruction)
+void Intern::execute(std::istream& in, Byte instruction)
 {
 	switch (instruction)
 	{
@@ -80,6 +82,6 @@ void LittleIntern::execute(std::istream& in, Byte instruction)
 		return;
 		case I_SFUNC: runFunction<Byte>(in); return;
 		case I_MFUNC: runFunction<unsigned short>(in); return;
-		case I_BFUNC: runFunction<size_t>(in); return;
+		case I_LFUNC: runFunction<size_t>(in); return;
 	}
 }

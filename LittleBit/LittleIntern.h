@@ -5,58 +5,11 @@
 #include <functional>
 
 #define LILBIT_MAXPARAMS 16 //Number of parameters supported
-class LittleIntern //Interpreter class
+
+namespace LilBit
 {
-	public:
-	typedef void* Func (void**);
-
-	LittleIntern();
-	~LittleIntern();
-
-	void initiate(size_t funcCount, size_t staticCount);
-
-	void run(std::istream& in);
-
-	//Registers a function with an id and number of parameters
-	void registerFunc(size_t id, const std::function<LittleIntern::Func>& function, size_t params);
-	//Registers the address to an existing variable by id
-	void registerVariable(size_t id, void* var);
-
-	private:
 	typedef unsigned char Byte;
-
-	template<typename T> void read(std::istream& in, T& out)
-	{
-		in.read(reinterpret_cast<char*>(&out), sizeof(T));
-	}
-
-	template<typename T> T get(std::istream& in)
-	{
-		T out;
-		in.read(reinterpret_cast<char*>(&out), sizeof(T));
-		
-		return out;
-	}
-
-	template<typename T> void runFunction(std::istream& in)
-	{
-		T funcID = get<T>(in);
-		for (size_t i = 0; i < functions[funcID].second; i++)
-		{
-			parameterSel[i] = staticMemory[get<T>(in)];
-		}
-
-		if (!in.good()) { return; } //Safety
-
-		functions[funcID].first(parameterSel);
-	}
-
-	void execute(std::istream& in, Byte instruction);
-
-	std::pair<std::function<Func>, size_t>* functions; //Functions and their argument count
-	void** staticMemory; //Predefined variables
-
-	void* parameterSel[LILBIT_MAXPARAMS]; //Selected parameters for function calls
+	typedef void* Func(void**);
 
 	enum Instructions : Byte
 	{
@@ -74,8 +27,59 @@ class LittleIntern //Interpreter class
 
 		I_SFUNC = 8, //Calls a small id function with small id parameters
 		I_MFUNC = 9, //Calls a medium id function with medium id parameters
-		I_BFUNC = 10 //Calls any function with any parameters
+		I_LFUNC = 10 //Calls any function with any parameters
 	};
 
-};
+	class Intern //Interpreter class
+	{
+		public:
+			Intern();
+			~Intern();
+
+			void initiate(size_t funcCount, size_t staticCount);
+
+			void run(std::istream& in);
+
+			//Registers a function with an id and number of parameters
+			void registerFunc(size_t id, const std::function<Func>& function, size_t params);
+			//Registers the address to an existing variable by id
+			void registerVariable(size_t id, void* var);
+
+		private:
+
+			template<typename T> void read(std::istream& in, T& out)
+			{
+				in.read(reinterpret_cast<char*>(&out), sizeof(T));
+			}
+
+			template<typename T> T get(std::istream& in)
+			{
+				T out;
+				in.read(reinterpret_cast<char*>(&out), sizeof(T));
+
+				return out;
+			}
+
+			template<typename T> void runFunction(std::istream& in)
+			{
+				T funcID = get<T>(in);
+				for (size_t i = 0; i < functions[funcID].second; i++)
+				{
+					parameterSel[i] = staticMemory[get<T>(in)];
+				}
+
+				if (!in.good()) { return; } //Safety
+
+				functions[funcID].first(parameterSel);
+			}
+
+			void execute(std::istream& in, Byte instruction);
+
+			std::pair<std::function<Func>, size_t>* functions; //Functions and their argument count
+			void** staticMemory; //Predefined variables
+
+			void* parameterSel[LILBIT_MAXPARAMS]; //Selected parameters for function calls
+
+	};
+}
 

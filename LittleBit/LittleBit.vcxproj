@@ -139,9 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="LittleCode.h" />
+    <ClInclude Include="LittleCompiler.h" />
     <ClInclude Include="LittleIntern.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="LittleCode.cpp" />
+    <ClCompile Include="LittleCompiler.cpp" />
     <ClCompile Include="LittleIntern.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -56,3 +56,35 @@ Instruction Set
 
 [10] `LFUNC(large id, large[] params)`
 > Calls the registered function at `id` with the SM parameters referenced by IDs `params`. The amount listed in `params` *must* match the expected number of parameters as registered with the function
+
+**Possible instructions to implement**
+
+[?] `ADD(small idFirst, small idSecond)`
+> Adds the SM value (of the address) at `idSecond` to the SM value at `idFirst`, overwriting the value at `idFirst` in the process
+
+[?] `ADDC(small id, small idConstant)`
+> Adds the constant value at `idConstant` to the SM value at `id`, overwriting the value at `id` in the process
+
+[?] `SUB(small idFirst, small idSecond)`
+> Subtracts the SM value (of the address) at `idSecond` from the SM value at `idFirst`, overwriting the value at `idFirst` in the process
+
+[?] `SUBC(small idFirst, small idConstant)`
+> Subtracts the constant value at `idConstant` from the SM value at `idFirst`, overwriting the value at `idFirst` in the process
+
+[?] `MUL(small idFirst, small idSecond)`
+> Multiplies the SM value (of the address) at `idSecond` with the SM value at `idFirst`, overwriting the value at `idFirst` in the process
+
+[?] `MULC(small id, small idConstant)`
+> Multiplies the constant value at `idConstant` with the SM value at `id`, overwriting the value at `id` in the process
+
+[?] `CPY(large dest, large from)`
+> Copies the SM value (of the address) at `from` to the SM value at `dest`
+
+[?] `NEG(small id)`
+> Performs NOT on the SM value (of the address) at `id`
+
+[?] `CRITSTART`
+> Signals the beginning of a critical section of code. Locks the shared mutex. Used for parallel processing capabilities
+
+[?] `CRITEND`
+> Signals the end of a critical section of code, releasing the shared mutex

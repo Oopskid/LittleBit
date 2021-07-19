@@ -30,6 +30,26 @@ namespace LilBit
 		I_LFUNC = 10 //Calls any function with any parameters
 	};
 
+	//Edge (end) case component of unpacking a parameter selection into static type references
+	template<typename T> void unpackElements(void** pack, size_t i, T& subject)
+	{
+		subject = *reinterpret_cast<T*>(pack[i]);
+	}
+
+	//Recursive component of unpacking a parameter selection into static type references
+	template<typename T, typename... P> void unpackElements(void** pack, size_t i, T& subject, P&... rest)
+	{
+		subject = *reinterpret_cast<T*>(pack[i]);
+		unpackElements(pack, i + 1, rest...);
+	}
+
+	//Unpacks a parameter selection into static type references
+	//USED TO DECIPHER LITTLEBIT INTERPRETER CALLS!
+	template<typename... T> void unpack(void** pack, T&... into)
+	{
+		unpackElements(pack, 0, into...);
+	}
+
 	class Intern //Interpreter class
 	{
 		public:

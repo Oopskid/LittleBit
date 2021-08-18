@@ -17,6 +17,8 @@ namespace LilBit
 
 		void addInstruction(Byte inst, std::string additional);
 
+		void mergeWith(const LilBit::Code& from);
+
 		private:
 		std::string raw;
 	};

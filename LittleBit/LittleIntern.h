@@ -9,7 +9,11 @@
 namespace LilBit
 {
 	typedef unsigned char Byte;
+	typedef Byte Small;
+	typedef unsigned short Medium;
+	typedef size_t Large;
 	typedef void* Func(void**);
+	typedef size_t ID;
 
 	enum Instructions : Byte
 	{
@@ -61,9 +65,9 @@ namespace LilBit
 			void run(std::istream& in);
 
 			//Registers a function with an id and number of parameters
-			void registerFunc(size_t id, const std::function<Func>& function, size_t params);
+			void registerFunc(ID id, const std::function<Func>& function, size_t params);
 			//Registers the address to an existing variable by id
-			void registerVariable(size_t id, void* var);
+			void registerVariable(ID id, void* var);
 
 		private:
 

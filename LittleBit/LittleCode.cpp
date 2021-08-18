@@ -18,3 +18,8 @@ void Code::addInstruction(Byte inst, std::string additional)
 	raw.push_back(inst);
 	raw.append(additional);
 }
+
+void LilBit::Code::mergeWith(const LilBit::Code& from)
+{
+	raw.append(from.raw);
+}

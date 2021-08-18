@@ -29,12 +29,12 @@ void Intern::run(std::istream& in)
 	}
 }
 
-void Intern::registerFunc(size_t id, const std::function<Func>& function, size_t params)
+void Intern::registerFunc(ID id, const std::function<Func>& function, size_t params)
 {
 	functions[id] = std::make_pair(function, params);
 }
 
-void Intern::registerVariable(size_t id, void* var)
+void Intern::registerVariable(ID id, void* var)
 {
 	staticMemory[id] = var;
 }
@@ -45,43 +45,43 @@ void Intern::execute(std::istream& in, Byte instruction)
 	{
 		default: in.setstate(std::ios_base::failbit); return;
 		case I_END: in.setstate(std::ios_base::eofbit); return;
-		case I_HOPFORWARD: in.seekg(get<Byte>(in), std::ios_base::_Seekcur); return;
-		case I_HOPBACK: in.seekg(-get<Byte>(in), std::ios_base::_Seekcur); return;
-		case I_JUMP: in.seekg(get<size_t>(in), std::ios_base::_Seekbeg); return;
+		case I_HOPFORWARD: in.seekg(get<Small>(in), std::ios_base::_Seekcur); return;
+		case I_HOPBACK: in.seekg(-get<Small>(in), std::ios_base::_Seekcur); return;
+		case I_JUMP: in.seekg(get<Large>(in), std::ios_base::_Seekbeg); return;
 		case I_BNZ:
 		{
-			Byte miniValLoc = get<Byte>(in);
-			size_t jumpPos = get<size_t>(in);
+			Small miniValLoc = get<Small>(in);
+			Large jumpPos = get<Large>(in);
 
 			if (staticMemory[miniValLoc] && in.good()) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
 		}
 		return;
 		case I_BOZ:
 		{
-			Byte miniValLoc = get<Byte>(in);
-			size_t jumpPos = get<size_t>(in);
+			Small miniValLoc = get<Small>(in);
+			Large jumpPos = get<Large>(in);
 
 			if (!staticMemory[miniValLoc] && in.good()) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
 		}
 		return;
 		case I_BNE:
 		{
-			Byte miniValLoc = get<Byte>(in);
-			size_t jumpPos = get<size_t>(in);
+			Small miniValLoc = get<Small>(in);
+			Large jumpPos = get<Large>(in);
 
 			if (intptr_t(staticMemory[miniValLoc]) < 0 && in.good()) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
 		}
 		return;
 		case I_BPO:
 		{
-			Byte miniValLoc = get<Byte>(in);
-			size_t jumpPos = get<size_t>(in);
+			Small miniValLoc = get<Small>(in);
+			Large jumpPos = get<Large>(in);
 
 			if (intptr_t(staticMemory[miniValLoc]) >= 0 && in.good()) { in.seekg(jumpPos, std::ios_base::_Seekbeg); }
 		}
 		return;
-		case I_SFUNC: runFunction<Byte>(in); return;
-		case I_MFUNC: runFunction<unsigned short>(in); return;
-		case I_LFUNC: runFunction<size_t>(in); return;
+		case I_SFUNC: runFunction<Small>(in); return;
+		case I_MFUNC: runFunction<Medium>(in); return;
+		case I_LFUNC: runFunction<Large>(in); return;
 	}
 }

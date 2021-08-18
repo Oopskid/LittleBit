@@ -139,14 +139,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Dependency.h" />
+    <ClInclude Include="FunctionWrangler.h" />
+    <ClInclude Include="JumpMark.h" />
     <ClInclude Include="LittleCode.h" />
     <ClInclude Include="LittleCompiler.h" />
     <ClInclude Include="LittleIntern.h" />
+    <ClInclude Include="Scope.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Dependency.cpp" />
+    <ClCompile Include="FunctionWrangler.cpp" />
+    <ClCompile Include="JumpMark.cpp" />
     <ClCompile Include="LittleCode.cpp" />
     <ClCompile Include="LittleCompiler.cpp" />
     <ClCompile Include="LittleIntern.cpp" />
+    <ClCompile Include="Scope.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

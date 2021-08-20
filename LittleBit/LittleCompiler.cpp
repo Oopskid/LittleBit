@@ -29,9 +29,67 @@ void LilBit::Compiler::postLog(std::string message)
 	log.push(message);
 }
 
+bool LilBit::Compiler::ifNull(ID smVar, ID endJumpID)
+{
+	return jumpTo(JumpMark(Instructions::I_BNZ, smVar, endJumpID));
+}
+
+bool LilBit::Compiler::ifValue(ID smVar, ID endJumpID)
+{
+	return jumpTo(JumpMark(Instructions::I_BOZ, smVar, endJumpID));
+}
+
+bool LilBit::Compiler::ifPositive(ID smVar, ID endJumpID)
+{
+	return jumpTo(JumpMark(Instructions::I_BNE, smVar, endJumpID));
+}
+
+bool LilBit::Compiler::ifNegative(ID smVar, ID endJumpID)
+{
+	return jumpTo(JumpMark(Instructions::I_BPO, smVar, endJumpID));
+}
+
+void LilBit::Compiler::jumpTo(std::string labelName)
+{
+	jumpTo(promiseJumpDest(labelName));
+}
+
+bool LilBit::Compiler::jumpTo(ID jumpID)
+{
+	return jumpTo(JumpMark(jumpID));
+}
+
+bool LilBit::Compiler::jumpTo(LilBit::JumpMark mark)
+{
+	if (mark.getJumpID() >= jumpIndexer.size()) { log.push("This jump location does not exist!"); return false; }
+
+	newRun();
+
+	jumps.push_back(std::make_pair(virtualLocation, mark));
+	return true;
+}
+
+bool LilBit::Compiler::doContinue(size_t scopeDif)
+{
+	if (scopeDif <= 0) { log.push("Cannot continue when the scope difference is <= 0"); return false; }
+	if (scopeDif > scopes.size()) { log.push("Cannot continue when the destination scope doesn't exist"); return false; }
+
+	return jumpTo(scopes[scopes.size() - scopeDif].getContinue());
+}
+
+bool LilBit::Compiler::doBreak(size_t scopeDif)
+{
+	if (scopeDif <= 0) { log.push("Cannot break when the scope difference is <= 0"); return false; }
+	if (scopeDif > scopes.size()) { log.push("Cannot break when the destination scope doesn't exist"); return false; }
+
+	return jumpTo(scopes[scopes.size() - scopeDif].getBreak());
+}
+
 void LilBit::Compiler::newScope()
 {
-	scopes.push_back(std::make_pair(promiseJumpDest(), promiseJumpDest()));
+	scopes.push_back(Scope());
+	scopes.back().setBreak(promiseJumpDest());
+	scopes.back().setContinue(promiseJumpDest());
 }
 
 bool LilBit::Compiler::declareLabel(std::string name)

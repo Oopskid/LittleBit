@@ -7,6 +7,13 @@ namespace LilBit
 	class JumpMark
 	{
 		public:
+		JumpMark();
+		JumpMark(ID jumpTo);
+		JumpMark(Byte branchBase, size_t branchParam, ID jumpTo);
+
+		Byte getInstruction();
+		ID getJumpID();
+		size_t getParam();
 
 		private:
 		Byte baseInstruction;

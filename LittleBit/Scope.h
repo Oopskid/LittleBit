@@ -3,12 +3,17 @@
 #include <list>
 
 #include "LittleIntern.h"
-#include "LittleCompiler.h"
 namespace LilBit
 {
 	class Scope
 	{
 		public:
+
+		ID getBreak();
+		ID getContinue();
+
+		void setBreak(ID breakJ);
+		void setContinue(ID continueJ);
 
 		private:
 		ID breakJumpID; //The jump location at the end of this scope

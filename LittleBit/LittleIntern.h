@@ -31,7 +31,10 @@ namespace LilBit
 
 		I_SFUNC = 8, //Calls a small id function with small id parameters
 		I_MFUNC = 9, //Calls a medium id function with medium id parameters
-		I_LFUNC = 10 //Calls any function with any parameters
+		I_LFUNC = 10, //Calls any function with any parameters
+
+		I_CNE = 11, //Sets a small address *value* flag for if another small address *value* is negative
+		I_CPO = 12 //Sets a small address *value* flag for if another small address *value* is positive
 	};
 
 	//Edge (end) case component of unpacking a parameter selection into static type references

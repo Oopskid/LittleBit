@@ -11,6 +11,7 @@
 #include "LittleCode.h"
 
 #include "JumpMark.h"
+#include "Scope.h"
 namespace LilBit
 {
 	//Verifies and compiles code into executable LittleBit bytecode
@@ -24,6 +25,27 @@ namespace LilBit
 		std::string& getLog();
 		void postLog(std::string message);
 
+		//Inserts a branch which jumps on *not null* for a SM value
+		bool ifNull(ID smVar, ID endJumpID);
+		//Inserts a branch which jumps on *null* for a SM value
+		bool ifValue(ID smVar, ID endJumpID);
+		//Inserts a branch which jumps on *-ve* for a SM twos complement value
+		bool ifPositive(ID smVar, ID endJumpID);
+		//Inserts a branch which jumps on *+ve* for a SM twos complement value
+		bool ifNegative(ID smVar, ID endJumpID);
+
+		//Inserts a jump command by name. Always successful until labels are bulk checked
+		void jumpTo(std::string labelName);
+		//Inserts a jump command. Returns if successful
+		bool jumpTo(ID jumpID);
+		//Inserts a generic jump command. Returns if successful
+		bool jumpTo(JumpMark mark);
+		//Inserts a jump command towards the designated continue a set number of scopes backwards. Returns if successful
+		bool doContinue(size_t scopeDif);
+		//Inserts a jump command towards the designated break a set number of scopes backwards. Returns if successful
+		bool doBreak(size_t scopeDif);
+
+		//Beginning of a new scope
 		void newScope();
 		//Declares a label at this point of the program. Returns if already declared. Overrides virtual location anyway
 		bool declareLabel(std::string name);
@@ -50,8 +72,8 @@ namespace LilBit
 		size_t exitLayer;
 			  
 		//TODO UH THIS SOLUTION *MIGHT* WORK
-		//Tracks the hierarchy. Break jump ID and continue jump ID
-		std::vector<std::pair<ID, ID>> scopes;
+		//Tracks the hierarchy
+		std::vector<Scope> scopes;
 		//Code packets between jump instructions and destinations
 		//(will be replaced in the future with an analytical system instead of direct)
 		std::vector<LilBit::Code> runs; 

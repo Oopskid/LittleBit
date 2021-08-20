@@ -83,5 +83,21 @@ void Intern::execute(std::istream& in, Byte instruction)
 		case I_SFUNC: runFunction<Small>(in); return;
 		case I_MFUNC: runFunction<Medium>(in); return;
 		case I_LFUNC: runFunction<Large>(in); return;
+		case I_CNE:
+		{
+			Small flagLoc = get<Small>(in);
+			Small valLoc = get<Small>(in);
+
+			staticMemory[flagLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) < 0);
+		}
+		return;
+		case I_CPO:
+		{
+			Small flagLoc = get<Small>(in);
+			Small valLoc = get<Small>(in);
+
+			staticMemory[flagLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) >= 0);
+		}
+		return;
 	}
 }

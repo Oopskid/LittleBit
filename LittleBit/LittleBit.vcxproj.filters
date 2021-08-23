@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Analysis">
       <UniqueIdentifier>{9d2ae092-ec43-441f-8832-74bf3467e789}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Build">
+      <UniqueIdentifier>{918eb5ba-9b1b-4401-9a61-3bef4fd17f57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Build">
+      <UniqueIdentifier>{a0c7136b-1240-4609-a3d7-7b4189b1f8dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LittleIntern.h">
@@ -33,14 +39,17 @@
     <ClInclude Include="Dependency.h">
       <Filter>Header Files\Analysis</Filter>
     </ClInclude>
-    <ClInclude Include="JumpMark.h">
-      <Filter>Header Files\Analysis</Filter>
-    </ClInclude>
     <ClInclude Include="FunctionWrangler.h">
       <Filter>Header Files\Analysis</Filter>
     </ClInclude>
-    <ClInclude Include="Scope.h">
+    <ClInclude Include="Frogger.h">
       <Filter>Header Files\Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="Scope.h">
+      <Filter>Header Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpMark.h">
+      <Filter>Header Files\Build</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,14 +65,17 @@
     <ClCompile Include="Dependency.cpp">
       <Filter>Source Files\Analysis</Filter>
     </ClCompile>
-    <ClCompile Include="JumpMark.cpp">
-      <Filter>Source Files\Analysis</Filter>
-    </ClCompile>
     <ClCompile Include="FunctionWrangler.cpp">
       <Filter>Source Files\Analysis</Filter>
     </ClCompile>
-    <ClCompile Include="Scope.cpp">
+    <ClCompile Include="Frogger.cpp">
       <Filter>Source Files\Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="Scope.cpp">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="JumpMark.cpp">
+      <Filter>Source Files\Build</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

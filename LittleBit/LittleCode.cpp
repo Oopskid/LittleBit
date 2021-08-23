@@ -23,3 +23,8 @@ void LilBit::Code::mergeWith(const LilBit::Code& from)
 {
 	raw.append(from.raw);
 }
+
+size_t LilBit::Code::getSize()
+{
+	return raw.size();
+}

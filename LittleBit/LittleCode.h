@@ -19,6 +19,8 @@ namespace LilBit
 
 		void mergeWith(const LilBit::Code& from);
 
+		size_t getSize();
+
 		private:
 		std::string raw;
 	};

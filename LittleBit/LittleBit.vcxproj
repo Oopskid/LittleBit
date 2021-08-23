@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Dependency.h" />
+    <ClInclude Include="Frogger.h" />
     <ClInclude Include="FunctionWrangler.h" />
     <ClInclude Include="JumpMark.h" />
     <ClInclude Include="LittleCode.h" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dependency.cpp" />
+    <ClCompile Include="Frogger.cpp" />
     <ClCompile Include="FunctionWrangler.cpp" />
     <ClCompile Include="JumpMark.cpp" />
     <ClCompile Include="LittleCode.cpp" />

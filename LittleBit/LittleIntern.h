@@ -5,6 +5,7 @@
 #include <functional>
 
 #define LILBIT_MAXPARAMS 16 //Number of parameters supported
+#define LILBIT_SMALLMAX 
 
 namespace LilBit
 {
@@ -14,6 +15,13 @@ namespace LilBit
 	typedef size_t Large;
 	typedef void* Func(void**);
 	typedef size_t ID;
+
+	const size_t SmallMax = (Small)~0;
+	const size_t MediumMax = (Medium)~0;
+	const size_t LargeMax = (Large)~0;
+
+	//Allows selection of the required word size
+	static constexpr size_t DYSize[3] = { sizeof(Small), sizeof(Medium), sizeof(Large) };
 
 	enum Instructions : Byte
 	{

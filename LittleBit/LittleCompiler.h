@@ -20,10 +20,18 @@ namespace LilBit
 		public:
 		Compiler();
 
+		//Determines if a Small, Medium or Large is required to represent this value
+		static Byte getSizeRequirement(ID value);
+
 		bool hasLog();
 		void nextLog();
 		std::string& getLog();
 		void postLog(std::string message);
+
+		Code compileAll();
+
+		//Calls a named functions with named parameters
+		bool callFunction(std::string funcName, std::vector<std::string> argumNames);
 
 		//Inserts a branch which jumps on *not null* for a SM value
 		bool ifNull(ID smVar, ID endJumpID);
@@ -45,8 +53,15 @@ namespace LilBit
 		//Inserts a jump command towards the designated break a set number of scopes backwards. Returns if successful
 		bool doBreak(size_t scopeDif);
 
+		//Declares a new variable. Returns if successful
+		bool declareVariable(std::string type, std::string name);
+
 		//Beginning of a new scope
-		void newScope();
+		void newScope(ID tag);
+		//Ending of the current nested scope. Returns if the program is ready to be compiled
+		bool endScope();
+		//Ends a scope with a jump to the end of an upcoming scope that is created directly afterwards (looking at you ELSE and FINALLY!)
+		void scopeHop(ID tag);
 		//Declares a label at this point of the program. Returns if already declared. Overrides virtual location anyway
 		bool declareLabel(std::string name);
 		//Declares a type. Returns the ID of the new declaration or a found existing one
@@ -58,6 +73,16 @@ namespace LilBit
 		bool assertFunction(ID id, std::string name, const std::vector<std::string>& params);
 
 		private:
+		//Dangerous! Fast hand for referring to data generically
+		template<typename T> char* raw(T& x)
+		{
+			return (char*)(&x);
+		}
+
+		//Finds an available SM location and declares it in the current scope
+		ID newVar(ID type);
+		//Inserts a call instruction without checks
+		void callFunc(ID function, const std::vector<ID>& params);
 		//Splits off a new code packet
 		void newRun();
 		//Declares/fetches the jump ID associated with a label name
@@ -89,18 +114,19 @@ namespace LilBit
 
 		//The earliest free SM location
 		size_t lastFreeStatic;
+		//The number of SM variables 
+		size_t smCount;
 		//Represents all SM spaces, if the space is taken and its type
-		std::tuple<bool, ID>* statics;
+		std::pair<bool, ID>* statics;
 		//Maps visible variable name to SM space
 		std::map<std::string, ID> staticVariables;
 
 		ID typeProg; //Represents the next available unique type ID
-		//Pairs a type name with its associated ID and scope. Aliases inherit the same ID
-		std::map<std::string, std::pair<ID, size_t>> typeDec;
+		//Pairs a type name with its associated ID. Aliases inherit the same ID
+		std::map<std::string, ID> typeDec;
 
 		//Pairs function name with parameter list and then pairs that to a unique ID
 		std::map<std::string, std::map<std::vector<ID>, ID>> functionDec;
 
 	};
 }
-

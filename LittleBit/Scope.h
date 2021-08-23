@@ -8,14 +8,8 @@ namespace LilBit
 	class Scope
 	{
 		public:
+		ID scopeTag; //Implementation defined
 
-		ID getBreak();
-		ID getContinue();
-
-		void setBreak(ID breakJ);
-		void setContinue(ID continueJ);
-
-		private:
 		ID breakJumpID; //The jump location at the end of this scope
 		ID continueJumpID; //The jump location which logically begins this scope
 
@@ -25,4 +19,3 @@ namespace LilBit
 		std::list<std::string> typeDecs; //Names of types in this scope
 	};
 }
-

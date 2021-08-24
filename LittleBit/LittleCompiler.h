@@ -12,13 +12,22 @@
 
 #include "JumpMark.h"
 #include "Scope.h"
+
+#include "Frogger.h"
 namespace LilBit
 {
+	//Dangerous! Fast hand for referring to data generically
+	template<typename T> char* raw(T& x)
+	{
+		return (char*)(&x);
+	}
+
 	//Verifies and compiles code into executable LittleBit bytecode
 	class Compiler
 	{
 		public:
 		Compiler();
+		~Compiler();
 
 		//Determines if a Small, Medium or Large is required to represent this value
 		static Byte getSizeRequirement(ID value);
@@ -28,6 +37,10 @@ namespace LilBit
 		std::string& getLog();
 		void postLog(std::string message);
 
+		void prepareSM(size_t smSizes);
+
+		//Checks some final
+		bool finalCheck();
 		Code compileAll();
 
 		//Calls a named functions with named parameters
@@ -53,8 +66,8 @@ namespace LilBit
 		//Inserts a jump command towards the designated break a set number of scopes backwards. Returns if successful
 		bool doBreak(size_t scopeDif);
 
-		//Declares a new variable. Returns if successful
-		bool declareVariable(std::string type, std::string name);
+		//Declares a new variable. Returns ID if successful
+		ID declareVariable(std::string type, std::string name);
 
 		//Beginning of a new scope
 		void newScope(ID tag);
@@ -73,11 +86,6 @@ namespace LilBit
 		bool assertFunction(ID id, std::string name, const std::vector<std::string>& params);
 
 		private:
-		//Dangerous! Fast hand for referring to data generically
-		template<typename T> char* raw(T& x)
-		{
-			return (char*)(&x);
-		}
 
 		//Finds an available SM location and declares it in the current scope
 		ID newVar(ID type);

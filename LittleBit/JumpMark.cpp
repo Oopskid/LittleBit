@@ -42,6 +42,41 @@ void LilBit::JumpMark::setJumpID(ID location)
 	jumpID = location;
 }
 
+std::string LilBit::JumpMark::makeCode(size_t realLocation, size_t realDestination)
+{
+	std::string raw;
+
+	raw.append(LilBit::raw(baseInstruction), sizeof(Small)); //Instruction itself
+	switch (baseInstruction)
+	{
+		default: return std::string(); //undefined
+		
+		case I_JUMP:
+			raw.append(LilBit::raw(realDestination), sizeof(Large)); //Global destination
+		return raw;
+
+		case I_HOPBACK:
+			realDestination = realLocation - realDestination; //Backwards offset
+			raw.append(LilBit::raw(realDestination), sizeof(Small));
+		return raw;
+
+		case I_HOPFORWARD:
+			realDestination -= realLocation; //Forwards offset
+			raw.append(LilBit::raw(realDestination), sizeof(Small));
+		return raw;
+
+		case I_BNZ:
+		case I_BOZ:
+		case I_BNE:
+		case I_BPO:
+			raw.append(LilBit::raw(param), sizeof(Small)); //Param
+			raw.append(LilBit::raw(realDestination), sizeof(Large)); //Global destination
+		return raw;
+	}
+
+	return raw;
+}
+
 void LilBit::JumpMark::optimiseInstruction(bool polarity, size_t span)
 {
 	Byte fittingType = LilBit::Compiler::getSizeRequirement(span);

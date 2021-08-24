@@ -19,6 +19,11 @@ void Code::addInstruction(Byte inst, std::string additional)
 	raw.append(additional);
 }
 
+void LilBit::Code::addRaw(std::string byteCode)
+{
+	raw.append(byteCode);
+}
+
 void LilBit::Code::mergeWith(const LilBit::Code& from)
 {
 	raw.append(from.raw);

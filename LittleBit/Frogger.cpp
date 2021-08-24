@@ -26,15 +26,49 @@ void LilBit::Frogger::resolveInstructions()
 	}
 }
 
+LilBit::Code LilBit::Frogger::build()
+{
+	calcRealLocations();
+
+	Code built;
+
+	//Virtual locations are always less than runs (by at least one)
+	//Each jump instruction matches a run
+	size_t progress = 0;
+	for (; progress < virtuals.size(); progress++)
+	{
+		built.mergeWith((*runs)[progress]); //Prior code
+
+		JumpMark& mark = std::get<0>(virtuals[progress]);
+		built.addRaw(mark.makeCode(std::get<1>(virtuals[progress]), std::get<1>(virtuals[mark.getJumpID()]))); //Instruction
+	}
+
+	//Concatenate extra code
+	for (;  progress < runs->size(); progress++) { built.mergeWith((*runs)[progress]); }
+
+	return built;
+}
+
 void LilBit::Frogger::calcMinGuarantees()
 {
 	size_t progress = 0;
 	for (size_t i = 0; i < virtuals.size(); i++)
 	{
-		std::get<1>(virtuals[i]) = progress;
+		progress += (*runs)[i].getSize(); //After this chunk
 
-		progress += (*runs)[i].getSize(); //Next chunk
+		std::get<1>(virtuals[i]) = progress;
 	}
+}
+
+void LilBit::Frogger::calcRealLocations()
+{
+	size_t jmpPadding = 0;
+	for (size_t i = 0; i < virtuals.size(); i++)
+	{
+		std::get<1>(virtuals[i]) += jmpPadding; //Add extra space due to jumps prior
+		jmpPadding += std::get<0>(virtuals[i]).getInstructionSize(); //Now this is another jump ontop of everything!
+	}
+
 }
 
 size_t LilBit::Frogger::determineSize(ID jmpVirtLoc, std::set<ID>& visited)
@@ -68,7 +102,7 @@ size_t LilBit::Frogger::determineSize(ID jmpVirtLoc, std::set<ID>& visited)
 	}
 
 	//Figure out optimised instruction based on range
-
+	mark.optimiseInstruction(mark.getJumpID() < jmpVirtLoc, approxSpan);
 
 	std::get<2>(virtuals[jmpVirtLoc]) = true;
 	return mark.getInstructionSize();

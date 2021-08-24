@@ -20,9 +20,14 @@ namespace LilBit
 		//Works out suitable optimised instructions
 		void resolveInstructions();
 
+		//Builds a final, single section of code that includes all jumps and precompiled code
+		LilBit::Code build();
+
 		private:
 		//Calculates the amount of guaranteed bytes to each virtual location
 		void calcMinGuarantees();
+		//Calculates the real location per virtual location after all jumps are resolved
+		void calcRealLocations();
 
 		//Approximately determines the efficient size of a jump/branch instruction relative to other instructions
 		//Permanently remembers the 'solution'. Recursive algorithm. Returns the determined or already determined size

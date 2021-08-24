@@ -16,7 +16,7 @@ namespace LilBit
 		void run(Intern& interpreter);
 
 		void addInstruction(Byte inst, std::string additional);
-
+		void addRaw(std::string byteCode);
 		void mergeWith(const LilBit::Code& from);
 
 		size_t getSize();

@@ -9,8 +9,15 @@ LilBit::Compiler::Compiler()
 	virtualLocation = 0;
 
 	exitLayer = 1;
-	lastFreeStatic = 0;
+	lastFreeStatic = 1;
 	statics = nullptr;
+}
+
+LilBit::Compiler::~Compiler()
+{
+	delete statics;
+	statics = nullptr;
+
 }
 
 bool LilBit::Compiler::hasLog()
@@ -33,16 +40,43 @@ void LilBit::Compiler::postLog(std::string message)
 	log.push(message);
 }
 
+void LilBit::Compiler::prepareSM(size_t smSize)
+{
+	//New memory
+	delete statics;
+	statics = new std::pair<bool, ID>[smSize];
+	staticVariables.clear();
+
+	//Make all memory available
+	for (size_t i = 1; i < smSize; i++) { statics[i].first = false; }
+
+	//Reserve null
+	lastFreeStatic = 1;
+	statics[0].first = true;
+}
+
 Code LilBit::Compiler::compileAll()
 {
-	Code code;
-	for (size_t i = 0; i < runs.size(); i++)
+	Frogger jumpResolv(&runs, virtualLocation);
+
+	//Hand over jumps (with traded ID)
+	for (size_t i = 0; i < jumps.size(); i++)
 	{
-		code.mergeWith(runs[i]);
+		JumpMark newMark = jumps[i].second;
+		newMark.setJumpID(jumpIndexer[newMark.getJumpID()]); //Trade ID for virtual location
+
+		jumpResolv.registerJump(jumps[i].first, newMark);
 	}
 
+	//Hand over destinations
+	for (size_t i = 0; i < jumpIndexer.size(); i++)
+	{
+		jumpResolv.registerDestination(jumpIndexer[i]);
+	}
 
-	return code;
+	jumpResolv.resolveInstructions();
+
+	return jumpResolv.build();
 }
 
 bool LilBit::Compiler::callFunction(std::string funcName, std::vector<std::string> argumNames)
@@ -129,24 +163,24 @@ bool LilBit::Compiler::doBreak(size_t scopeDif)
 	return jumpTo(scopes[scopes.size() - scopeDif].breakJumpID);
 }
 
-bool LilBit::Compiler::declareVariable(std::string type, std::string name)
+ID LilBit::Compiler::declareVariable(std::string type, std::string name)
 {
 	//Check type
 	auto typeIt = typeDec.find(type);
-	if (typeIt == typeDec.end()) { log.push(std::string("The type \"").append(type).append("\" does not exist")); return false; }
+	if (typeIt == typeDec.end()) { log.push(std::string("The type \"").append(type).append("\" does not exist")); return 0; }
 
 	//Check variable does not already exist
-	if (staticVariables.find(name) != staticVariables.end()) { log.push(std::string("The SM variable \"").append(name).append("\" is already declared!")); return false; }
+	if (staticVariables.find(name) != staticVariables.end()) { log.push(std::string("The SM variable \"").append(name).append("\" is already declared!")); return 0; }
 
 	ID varLoc = newVar(typeIt->second);
-	if (varLoc >= smCount) { log.push(std::string("SM overrun with new variable \"").append(name).append("\"!")); return false; }
+	if (varLoc >= smCount) { log.push(std::string("SM overrun with new variable \"").append(name).append("\"!")); return 0; }
 	
 	//Success! Make SM variable official
 	staticVariables.insert(std::make_pair(name, varLoc));
 	scopes.back().staticVariables.push_back(varLoc);
 	scopes.back().staticVarDecs.push_back(name);
 
-	return true;
+	return varLoc;
 }
 
 void LilBit::Compiler::newScope(ID tag)

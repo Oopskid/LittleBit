@@ -61,7 +61,7 @@ void LilBit::Compiler::prepareSM(size_t smSize)
 
 Code LilBit::Compiler::compileAll()
 {
-	Frogger jumpResolv(&runs, virtualLocation);
+	Frogger jumpResolv(&runs, virtualLocation + 1);
 
 	//Hand over jumps (with traded ID)
 	for (size_t i = 0; i < jumps.size(); i++)
@@ -97,8 +97,8 @@ bool LilBit::Compiler::callFunction(std::string funcName, std::vector<std::strin
 		auto smIt = staticVariables.find(argumNames[i]);
 		if (smIt == staticVariables.end()) { log.push(std::string("The variable \"").append(argumNames[i]).append("\" does not exist!")); return false; }
 
-		paramSMs.push_back(smIt->second);
-		paramTypes.push_back(statics[smIt->second].second);
+		paramSMs[i] = smIt->second;
+		paramTypes[i] = statics[smIt->second].second;
 	}
 
 	//Use arguments/parameters match to get the function
@@ -297,7 +297,7 @@ bool LilBit::Compiler::assertFunction(ID id, std::string name, const std::vector
 			return false;
 		}
 
-		paramLink.push_back(typeIt->second);
+		paramLink[i] = typeIt->second;
 	}
 
 	//Sort by name

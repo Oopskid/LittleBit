@@ -16,7 +16,7 @@ Intern::~Intern()
 
 void Intern::initiate(size_t funcCount, size_t staticCount)
 {
-	functions = new std::pair<std::function<Func>, size_t>[funcCount];
+	functions = new std::pair<Functor, size_t>[funcCount];
 	staticMemory = new void* [staticCount];
 }
 
@@ -29,7 +29,7 @@ void Intern::run(std::istream& in)
 	}
 }
 
-void Intern::registerFunc(ID id, const std::function<Func>& function, size_t params)
+void Intern::registerFunc(ID id, const Functor& function, size_t params)
 {
 	functions[id] = std::make_pair(function, params);
 }

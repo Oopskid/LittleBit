@@ -13,7 +13,8 @@ namespace LilBit
 	typedef Byte Small;
 	typedef unsigned short Medium;
 	typedef size_t Large;
-	typedef void* Func(void**);
+	typedef void (*Func) (void**);
+	typedef std::function<void (void**)> Functor;
 	typedef size_t ID;
 
 	const size_t SmallMax = (Small)~0;
@@ -76,7 +77,7 @@ namespace LilBit
 			void run(std::istream& in);
 
 			//Registers a function with an id and number of parameters
-			void registerFunc(ID id, const std::function<Func>& function, size_t params);
+			void registerFunc(ID id, const Functor& function, size_t params);
 			//Registers the address to an existing variable by id
 			void registerVariable(ID id, void* var);
 
@@ -110,7 +111,7 @@ namespace LilBit
 
 			void execute(std::istream& in, Byte instruction);
 
-			std::pair<std::function<Func>, size_t>* functions; //Functions and their argument count
+			std::pair<Functor, size_t>* functions; //Functions and their argument count
 			void** staticMemory; //Predefined variables
 
 			void* parameterSel[LILBIT_MAXPARAMS]; //Selected parameters for function calls

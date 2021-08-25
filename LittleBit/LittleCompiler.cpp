@@ -11,6 +11,9 @@ LilBit::Compiler::Compiler()
 	exitLayer = 1;
 	lastFreeStatic = 1;
 	statics = nullptr;
+	smCount = 0;
+
+	runs.push_back(LilBit::Code());
 }
 
 LilBit::Compiler::~Compiler()
@@ -45,6 +48,7 @@ void LilBit::Compiler::prepareSM(size_t smSize)
 	//New memory
 	delete statics;
 	statics = new std::pair<bool, ID>[smSize];
+	smCount = smSize;
 	staticVariables.clear();
 
 	//Make all memory available
@@ -194,7 +198,6 @@ void LilBit::Compiler::newScope(ID tag)
 bool LilBit::Compiler::endScope()
 {
 	Scope& scope = scopes.back();
-	//TODO
 
 	//Implement break
 	newRun();

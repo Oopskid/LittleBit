@@ -5,7 +5,7 @@ LilBit::FunctionWrangler::FunctionWrangler()
 	nextFunc = 0;
 }
 
-LilBit::FunctionWrangler& LilBit::FunctionWrangler::addFunction(float freq, std::string name, std::vector<std::string> paramTypes, std::function<Func> function)
+LilBit::FunctionWrangler& LilBit::FunctionWrangler::addFunction(float freq, std::string name, std::vector<std::string> paramTypes, Functor function)
 {
 	functionOrd.insert(std::make_pair(freq, std::make_tuple(name, paramTypes, function))).second;
 	return *this;

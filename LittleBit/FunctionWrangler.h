@@ -16,14 +16,14 @@ namespace LilBit
 		public:
 		FunctionWrangler();
 
-		LilBit::FunctionWrangler& addFunction(float freq, std::string name, std::vector<std::string> paramTypes, std::function<Func> function);
+		LilBit::FunctionWrangler& addFunction(float freq, std::string name, std::vector<std::string> paramTypes, Functor function);
 
 		//Attempts to register functions, returns if successful
 		bool bakeFunctions(LilBit::Intern& interpreter, LilBit::Compiler& compiler);
 
 		private:
 		//Function frequency paired with function name, function param types and the function itself
-		std::map<float, std::tuple<std::string, std::vector<std::string>, std::function<Func>>> functionOrd;
+		std::map<float, std::tuple<std::string, std::vector<std::string>, Functor>> functionOrd;
 		ID nextFunc;
 	};
 }

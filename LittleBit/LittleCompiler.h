@@ -39,8 +39,9 @@ namespace LilBit
 
 		void prepareSM(size_t smSizes);
 
-		//Checks some final
-		bool finalCheck();
+		//Some final checks before compilation. Returns if no issues to report
+			//bool finalCheck();
+		//Generates code
 		Code compileAll();
 
 		//Calls a named functions with named parameters
@@ -75,7 +76,7 @@ namespace LilBit
 		bool endScope();
 		//Ends a scope with a jump to the end of an upcoming scope that is created directly afterwards (looking at you ELSE and FINALLY!)
 		void scopeHop(ID tag);
-		//Declares a label at this point of the program. Returns if already declared. Overrides virtual location anyway
+		//Declares a label at this point of the program. Returns if already declared (promise or otherwise). Overrides virtual location anyway
 		bool declareLabel(std::string name);
 		//Declares a type. Returns the ID of the new declaration or a found existing one
 		ID declareType(std::string name);

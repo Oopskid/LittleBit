@@ -44,6 +44,9 @@ namespace LilBit
 		//Generates code
 		Code compileAll();
 
+		//Simply inserts an end instruction
+		void doEnd();
+
 		//Calls a named functions with named parameters
 		bool callFunction(std::string funcName, std::vector<std::string> argumNames);
 
@@ -87,7 +90,6 @@ namespace LilBit
 		bool assertFunction(ID id, std::string name, const std::vector<std::string>& params);
 
 		private:
-
 		//Finds an available SM location and declares it in the current scope
 		ID newVar(ID type);
 		//Inserts a call instruction without checks

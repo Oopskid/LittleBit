@@ -99,5 +99,114 @@ void Intern::execute(std::istream& in, Byte instruction)
 			staticMemory[flagLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) >= 0);
 		}
 		return;
+		case I_ADD:
+		{
+			Small valLoc = get<Small>(in);
+			Small offsetLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) + intptr_t(staticMemory[offsetLoc]));
+		}
+		return;
+		case I_SUB:
+		{
+			Small valLoc = get<Small>(in);
+			Small offsetLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) - intptr_t(staticMemory[offsetLoc]));
+		}
+		return;
+		case I_MUL:
+		{
+			Small valLoc = get<Small>(in);
+			Small coefLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) * intptr_t(staticMemory[coefLoc]));
+		}
+		return;
+		case I_DIV:
+		{
+			Small valLoc = get<Small>(in);
+			Small divLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) / intptr_t(staticMemory[divLoc]));
+		}
+		return;
+		case I_AND:
+		{
+			Small valLoc = get<Small>(in);
+			Small maskLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) & intptr_t(staticMemory[maskLoc]));
+		}
+		return;
+		case I_OR:
+		{
+			Small valLoc = get<Small>(in);
+			Small setLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) | intptr_t(staticMemory[setLoc]));
+		}
+		return;
+		case I_XOR:
+		{
+			Small valLoc = get<Small>(in);
+			Small switchLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) ^ intptr_t(staticMemory[switchLoc]));
+		}
+		return;
+		case I_LSH:
+		{
+			Small valLoc = get<Small>(in);
+			Small shiftLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) << intptr_t(staticMemory[shiftLoc]));
+		}
+		return;
+		case I_RSH:
+		{
+			Small valLoc = get<Small>(in);
+			Small shiftLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) >> intptr_t(staticMemory[shiftLoc]));
+		}
+		return;
+		case I_MOD:
+		{
+			Small valLoc = get<Small>(in);
+			Small divLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) % intptr_t(staticMemory[divLoc]));
+		}
+		return;
+		case I_NOT:
+		{
+			Small valLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(~intptr_t(staticMemory[valLoc]));
+		}
+		return;
+		case I_INC:
+		{
+			Small valLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) + 1);
+		}
+		return;
+		case I_DEC:
+		{
+			Small valLoc = get<Small>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(staticMemory[valLoc]) - 1);
+		}
+		return;
+		case I_LDI:
+		{
+			Small valLoc = get<Small>(in);
+			Large constVal = get<Large>(in);
+
+			staticMemory[valLoc] = reinterpret_cast<void*>(intptr_t(constVal));
+		}
+		return;
 	}
 }

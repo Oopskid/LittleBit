@@ -43,7 +43,23 @@ namespace LilBit
 		I_LFUNC = 10, //Calls any function with any parameters
 
 		I_CNE = 11, //Sets a small address *value* flag for if another small address *value* is negative
-		I_CPO = 12 //Sets a small address *value* flag for if another small address *value* is positive
+		I_CPO = 12, //Sets a small address *value* flag for if another small address *value* is positive
+
+		I_ADD = 13, //Adds two small address *value*s and sets the result to the first SM
+		I_SUB = 14, //Subtracts a small address *value* from another. Result is set
+		I_MUL = 15, //Multiplies two small address *value*s and sets the result to the first SM
+		I_DIV = 16, //Divides a small address *value* from another and sets the result to the first SM
+		I_AND = 17, //Performs logical AND with two small address *value*s and sets the result to the first SM
+		I_OR = 18, //Performs logical OR with two small address *value*s and sets the result to the first SM
+		I_XOR = 19, //Performs logical XOR with two small address *value*s and sets the result to the first SM
+		I_LSH = 20, //Performs left shift on a small address *value* with another. Result is set
+		I_RSH = 21, //Performs right shift on a small address *value* with another. Result is set
+		I_MOD = 22, //Finds the remainder from two small address *value*s and set to the first SM
+
+		I_NOT = 23, //Performs logical NOT on a small address *value* and sets it to the result
+		I_INC = 24, //Increments the small address *value*
+		I_DEC = 25, //Decrements the small address *value*
+		I_LDI = 26 //Sets the *value* at a small address to the large constant specified
 	};
 
 	//Edge (end) case component of unpacking a parameter selection into static type references

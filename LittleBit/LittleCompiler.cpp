@@ -97,6 +97,8 @@ bool LilBit::Compiler::finalCheck()
 
 Code LilBit::Compiler::compileAll()
 {
+	doEnd();
+
 	Frogger jumpResolv(&runs, virtualLocation + 1);
 
 	//Hand over jumps (with traded ID)
@@ -120,6 +122,11 @@ Code LilBit::Compiler::compileAll()
 	jumpResolv.resolveInstructions();
 
 	return jumpResolv.build();
+}
+
+void LilBit::Compiler::doEnd()
+{
+	runs.back().addInstruction(I_END, "");
 }
 
 bool LilBit::Compiler::callFunction(std::string funcName, std::vector<std::string> argumNames)

@@ -59,6 +59,42 @@ void LilBit::Compiler::prepareSM(size_t smSize)
 	statics[0].first = true;
 }
 
+bool LilBit::Compiler::finalCheck()
+{
+	bool checkResult = true;
+
+	if (virtualLocation + 1 != runs.size())
+	{
+		log.push("There is an inconsistency between virtual locations and runs, compilation is impossible!");
+		checkResult = false;
+	}
+
+	//Find all name-able jump labels that inevitably weren't declared
+	for (auto label : jumpLabels)
+	{
+		if (!jumpIndexer[label.second].second)
+		{
+			log.push(std::string("The promised label \"").append(label.first).append("\" does not exist!"));
+			checkResult = false;
+		}
+	}
+
+	//Count how many jumps are invalid
+	{
+		size_t countDeadLabels = 0;
+		for (auto i : jumps)
+		{
+			if (!jumpIndexer[i.second.getJumpID()].second)
+			{
+				countDeadLabels++;
+			}
+		}
+		if (countDeadLabels) { log.push(std::string("A total of ").append(std::to_string(countDeadLabels)).append(" jump(s) are invalid due to broken promises!")); checkResult = false; }
+	}
+
+	return checkResult;
+}
+
 Code LilBit::Compiler::compileAll()
 {
 	Frogger jumpResolv(&runs, virtualLocation + 1);
@@ -67,7 +103,7 @@ Code LilBit::Compiler::compileAll()
 	for (size_t i = 0; i < jumps.size(); i++)
 	{
 		JumpMark newMark = jumps[i].second;
-		newMark.setJumpID(jumpIndexer[newMark.getJumpID()]); //Trade ID for virtual location
+		newMark.setJumpID(jumpIndexer[newMark.getJumpID()].first); //Trade ID for virtual location
 
 		jumpResolv.registerJump(jumps[i].first, newMark);
 	}
@@ -75,7 +111,10 @@ Code LilBit::Compiler::compileAll()
 	//Hand over destinations
 	for (size_t i = 0; i < jumpIndexer.size(); i++)
 	{
-		jumpResolv.registerDestination(jumpIndexer[i]);
+		if (jumpIndexer[i].second)
+		{
+			jumpResolv.registerDestination(jumpIndexer[i].first);
+		}
 	}
 
 	jumpResolv.resolveInstructions();
@@ -191,6 +230,7 @@ void LilBit::Compiler::newScope(ID tag)
 {
 	scopes.push_back(Scope());
 	scopes.back().scopeTag = tag;
+
 	scopes.back().breakJumpID = promiseJumpDest();
 	scopes.back().continueJumpID = promiseJumpDest();
 }
@@ -201,7 +241,7 @@ bool LilBit::Compiler::endScope()
 
 	//Implement break
 	newRun();
-	jumpIndexer[scope.breakJumpID] = virtualLocation;
+	jumpIndexer[scope.breakJumpID] = std::make_pair(virtualLocation, true);
 
 	//Remove all scope dependant definitions
 	//Type defs
@@ -240,17 +280,19 @@ void LilBit::Compiler::scopeHop(ID tag)
 
 bool LilBit::Compiler::declareLabel(std::string name)
 {
+	newRun(); //No matter the outcome, a new run is mandatory
+
 	auto lblIt = jumpLabels.find(name);
 	if (lblIt == jumpLabels.end())
 	{
 		lblIt = jumpLabels.insert(std::make_pair(name, jumpIndexer.size())).first;
 		
-		jumpIndexer.push_back(virtualLocation);
+		jumpIndexer.push_back(std::make_pair(virtualLocation, true));
 
 		return false;
 	}
 
-	jumpIndexer[lblIt->second] = virtualLocation;
+	jumpIndexer[lblIt->second] = std::make_pair(virtualLocation, true);
 	return true;
 }
 
@@ -377,7 +419,7 @@ ID LilBit::Compiler::promiseJumpDest(std::string destName)
 	{
 		lblIt = jumpLabels.insert(std::make_pair(destName, jumpIndexer.size())).first;
 
-		jumpIndexer.push_back(0);
+		jumpIndexer.push_back(std::make_pair(0, false));
 	}
 
 	return lblIt->second;
@@ -386,6 +428,6 @@ ID LilBit::Compiler::promiseJumpDest(std::string destName)
 ID LilBit::Compiler::promiseJumpDest()
 {
 	ID id = jumpIndexer.size();
-	jumpIndexer.push_back(virtualLocation); //Assume jump to here for the now!
+	jumpIndexer.push_back(std::make_pair(virtualLocation, false));
 	return id;
 }

@@ -40,7 +40,7 @@ namespace LilBit
 		void prepareSM(size_t smSizes);
 
 		//Some final checks before compilation. Returns if no issues to report
-			//bool finalCheck();
+		bool finalCheck();
 		//Generates code
 		Code compileAll();
 
@@ -118,8 +118,8 @@ namespace LilBit
 		size_t virtualLocation; //Represents the current virtual location
 		//Pairs label name to a registered jump ID
 		std::map<std::string, ID> jumpLabels;
-		//Pairs jump ID to virtual location
-		std::vector<size_t> jumpIndexer;
+		//Pairs jump ID to virtual location and whether this destination has been set
+		std::vector<std::pair<size_t, bool>> jumpIndexer;
 
 		//The earliest free SM location
 		size_t lastFreeStatic;

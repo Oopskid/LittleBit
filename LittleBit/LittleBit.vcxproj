@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Dependency.h" />
+    <ClInclude Include="Expression.h" />
     <ClInclude Include="Frogger.h" />
     <ClInclude Include="FunctionWrangler.h" />
     <ClInclude Include="JumpMark.h" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dependency.cpp" />
+    <ClCompile Include="Expression.cpp" />
     <ClCompile Include="Frogger.cpp" />
     <ClCompile Include="FunctionWrangler.cpp" />
     <ClCompile Include="JumpMark.cpp" />
